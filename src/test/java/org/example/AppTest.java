@@ -1,22 +1,17 @@
 package org.example;
 
-import javafx.scene.image.Image;
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
 import org.junit.Test;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Rectangle;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.Random;
 import java.util.Vector;
 
@@ -26,7 +21,7 @@ import java.util.Vector;
 public class AppTest {
 
     @Test
-    public void MyTest() throws IOException, TesseractException, InterruptedException {
+    public void MyTest() {
         System.setProperty("webdriver.chrome.driver", "drivers/chromedriver.exe");
         ChromeOptions opt = new ChromeOptions();
         opt.addArguments("--disable-notifications");
@@ -36,8 +31,8 @@ public class AppTest {
         driver.manage().window().maximize();
         WebDriverWait wait = new WebDriverWait(driver, 10);
         interaktifVD(driver, wait);
-        odemePlaniNoIleYapilandirma(driver, wait);
         mtvAndTpc(driver, wait);
+        odemePlaniNoIleYapilandirma(driver, wait);
 
 
     }
@@ -46,18 +41,39 @@ public class AppTest {
         WebElement mtv = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"gen__1079\"]")));
         mtv.click();
         WebElement tcknVkn = driver.findElement(By.xpath("//*[@id=\"gen__1634\"]"));
-        tcknVkn.sendKeys(tcknGenerate());
+        tcknVkn.sendKeys("19850697780");
 
         WebElement plaka = driver.findElement(By.xpath("//*[@id=\"gen__1635\"]"));
-        plaka.sendKeys("1234567");
+        plaka.sendKeys("34jh0742");
 
         WebElement securityCode = driver.findElement(By.xpath("//*[@id=\"gen__1643\"]"));
-        securityCode.sendKeys("1234567");
+        String captchaValue = JOptionPane.showInputDialog("Lütfen captcha değerini giriniz!");
+
+        securityCode.sendKeys(captchaValue);
 
         WebElement questionClick = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"gen__1644\"]"))));
         questionClick.click();
-        WebElement okClick = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"runtime-body\"]/div[6]/div[2]/div/div/div/input")));
+
+        WebElement buy = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"gen__1880\"]")));
+        buy.click();
+
+        WebElement okClick =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"runtime-body\"]/div[6]/div[2]/div/div/div/input")));
         okClick.click();
+
+
+        WebElement criminalInfo =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"gen__1830\"]")));
+
+        criminalInfo.click();
+
+        WebElement criminalBuy =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"gen__1912\"]")));
+        criminalBuy.click();
+        WebElement criminalOkClick =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"runtime-body\"]/div[6]/div[2]/div/div/div/input")));
+        criminalOkClick.click();
+
+        WebElement closeComponent =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"gen__1627\"]/div[1]/div[1]/ul/li[2]/div")));
+        closeComponent.click();
+//        WebElement okClick = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"runtime-body\"]/div[6]/div[2]/div/div/div/input")));
+//        okClick.click();
         WebElement closeClick = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"runtime-body\"]/div[4]/div[1]/div[2]")));
         closeClick.click();
     }
@@ -72,7 +88,9 @@ public class AppTest {
         tcknVkn.sendKeys(tcknGenerate());
 
         WebElement securityCode = driver.findElement(By.xpath("//*[@id=\"gen__1623\"]"));
-        securityCode.sendKeys("1234567");
+        String captchaValue = JOptionPane.showInputDialog("Lütfen captcha değerini giriniz!");
+
+        securityCode.sendKeys(captchaValue);
 
         WebElement questionClick = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"gen__1624\"]"))));
         questionClick.click();
@@ -83,7 +101,7 @@ public class AppTest {
         closeClick.click();
     }
 
-    public void interaktifVD(WebDriver driver, WebDriverWait wait) throws IOException, TesseractException, InterruptedException {
+    public void interaktifVD(WebDriver driver, WebDriverWait wait) {
         WebElement mtv = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"gen__1084\"]")));
         WebElement tcknVkn = driver.findElement(By.xpath("//*[@id=\"gen__1057\"]"));
         tcknVkn.sendKeys(tcknGenerate());
@@ -91,24 +109,24 @@ public class AppTest {
         WebElement password = driver.findElement(By.xpath("//*[@id=\"gen__1058\"]"));
         password.sendKeys("10010101010");
         WebElement securityCode = driver.findElement(By.xpath("//*[@id=\"gen__1063\"]"));
-        Thread.sleep(5000);
-        File src = driver.findElement(By.xpath("//*[@id=\"gen__1060\"]")).getScreenshotAs(OutputType.FILE);
-
-        String path = "src\\test\\java\\org\\example\\screenshots\\captcha.png";
-        FileHandler.copy(src, new File(path));
-        Tesseract iTesseract = new Tesseract();
-        iTesseract.setDatapath("\\");
-        Rectangle rectangle = new Rectangle(0, 0, 86, 30);
-        File img = new File(path);
-        BufferedImage image = ImageIO.read(img);
-        String capText = "";
-        for (int i = 0; i < 6; i++) {
-            BufferedImage imga= cropImage(image, rectangle, i);
-            capText = capText + iTesseract.doOCR(imga);
-        }
-
-        String finalText = capText.split("below")[0].replaceAll("[^a-zA-Z0-9]", "");
-        securityCode.sendKeys(finalText);
+        String captchaValue = JOptionPane.showInputDialog("Lütfen captcha değerini giriniz!");
+//        File src = driver.findElement(By.xpath("//*[@id=\"gen__1060\"]")).getScreenshotAs(OutputType.FILE);
+//
+//        String path = "src\\test\\java\\org\\example\\screenshots\\captcha.png";
+//        FileHandler.copy(src, new File(path));
+//        Tesseract iTesseract = new Tesseract();
+//        iTesseract.setDatapath("\\");
+//        Rectangle rectangle = new Rectangle(0, 0, 86, 30);
+//        File img = new File(path);
+//        BufferedImage image = ImageIO.read(img);
+//        String capText = "";
+//        for (int i = 0; i < 6; i++) {
+//            BufferedImage imga= cropImage(image, rectangle, i);
+//            capText = capText + iTesseract.doOCR(imga);
+//        }
+//
+//        String finalText = capText.split("below")[0].replaceAll("[^a-zA-Z0-9]", "");
+        securityCode.sendKeys(captchaValue);
         WebElement loginClick = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"gen__1067\"]"))));
         loginClick.click();
         WebElement okClick = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"runtime-body\"]/div[4]/div[2]/div/div/div/input")));
